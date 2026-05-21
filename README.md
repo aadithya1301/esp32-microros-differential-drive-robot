@@ -4,36 +4,37 @@ A WiFi-controlled differential drive robot using an ESP32, micro-ROS, ROS 2, DC 
 
 This project allows an ESP32 robot to:
 
-* Receive `/cmd_vel` commands from ROS 2
-* Control two DC motors
-* Read wheel encoder ticks
-* Publish encoder data back to ROS 2
-* Communicate wirelessly over WiFi using micro-ROS UDP transport
+- Receive `/cmd_vel` commands from ROS 2
+- Control two DC motors
+- Read wheel encoder ticks
+- Publish encoder data back to ROS 2
+- Communicate wirelessly over WiFi using micro-ROS UDP transport
 
 ---
 
 # Features
 
-* ESP32 + micro-ROS integration
-* ROS 2 `/cmd_vel` subscriber
-* Left and right wheel encoder publishers
-* Differential drive movement
-* WiFi communication
-* Quadrature encoder support
-* Compatible with ROS 2 Jazzy / Humble
+- ESP32 + micro-ROS integration
+- ROS 2 `/cmd_vel` subscriber
+- Left and right wheel encoder publishers
+- Differential drive movement
+- WiFi communication
+- Quadrature encoder support
+- Compatible with ROS 2 Jazzy / Humble
+- Real-time encoder feedback
 
 ---
 
 # Hardware Used
 
-| Component            | Description                     |
-| -------------------- | ------------------------------- |
-| ESP32 Dev Board      | Main controller                 |
-| L298N / Motor Driver | Dual motor driver               |
-| N20 DC Motors        | Differential drive motors       |
-| Quadrature Encoders  | Wheel odometry                  |
-| Battery Pack         | Power source                    |
-| Ubuntu PC            | Running ROS 2 + micro-ROS Agent |
+| Component | Description |
+|---|---|
+| ESP32 Dev Board | Main controller |
+| L298N / Motor Driver | Dual motor driver |
+| N20 DC Motors | Differential drive motors |
+| Quadrature Encoders | Wheel odometry |
+| Battery Pack | Power source |
+| Ubuntu PC | Running ROS 2 + micro-ROS Agent |
 
 ---
 
@@ -42,24 +43,24 @@ This project allows an ESP32 robot to:
 ## Motor Driver Pins
 
 | ESP32 Pin | Function |
-| --------- | -------- |
-| 25        | EN1      |
-| 26        | IN1      |
-| 27        | IN2      |
-| 14        | EN2      |
-| 18        | IN3      |
-| 13        | IN4      |
+|---|---|
+| 25 | EN1 |
+| 26 | IN1 |
+| 27 | IN2 |
+| 14 | EN2 |
+| 18 | IN3 |
+| 13 | IN4 |
 
 ---
 
 ## Encoder Pins
 
-| ESP32 Pin | Encoder  |
-| --------- | -------- |
-| 34        | LEFT_C1  |
-| 35        | LEFT_C2  |
-| 33        | RIGHT_C1 |
-| 32        | RIGHT_C2 |
+| ESP32 Pin | Encoder |
+|---|---|
+| 34 | LEFT_C1 |
+| 35 | LEFT_C2 |
+| 33 | RIGHT_C1 |
+| 32 | RIGHT_C2 |
 
 ---
 
@@ -67,55 +68,89 @@ This project allows an ESP32 robot to:
 
 ## Subscriber
 
-| Topic      | Type                  | Description             |
-| ---------- | --------------------- | ----------------------- |
+| Topic | Type | Description |
+|---|---|---|
 | `/cmd_vel` | `geometry_msgs/Twist` | Robot velocity commands |
 
 ---
 
 ## Publishers
 
-| Topic            | Type             | Description               |
-| ---------------- | ---------------- | ------------------------- |
-| `/left_encoder`  | `std_msgs/Int32` | Left wheel encoder ticks  |
+| Topic | Type | Description |
+|---|---|---|
+| `/left_encoder` | `std_msgs/Int32` | Left wheel encoder ticks |
 | `/right_encoder` | `std_msgs/Int32` | Right wheel encoder ticks |
 
 ---
 
 # Robot Movements
 
-| Command         | Action        |
-| --------------- | ------------- |
-| `linear.x > 0`  | Move Forward  |
-| `linear.x < 0`  | Move Backward |
-| `angular.z > 0` | Turn Left     |
-| `angular.z < 0` | Turn Right    |
-| No input        | Stop          |
+| Command | Action |
+|---|---|
+| `linear.x > 0` | Move Forward |
+| `linear.x < 0` | Move Backward |
+| `angular.z > 0` | Turn Left |
+| `angular.z < 0` | Turn Right |
+| No input | Stop |
 
 ---
 
 # Software Requirements
 
-* Ubuntu 22/24
-* ROS 2 Jazzy or Humble
-* micro-ROS Agent
-* Arduino IDE or PlatformIO
-* ESP32 Board Package
-* micro_ros_arduino library
+- Ubuntu 22.04 / 24.04
+- ROS 2 Jazzy or Humble
+- micro-ROS Agent
+- Arduino IDE or PlatformIO
+- ESP32 Board Package
+- `micro_ros_arduino` library
+
+---
+
+# Configure WiFi
+
+Before uploading the code, replace the following placeholders inside the `.ino` file:
+
+```cpp
+WiFi.begin(
+    "YOUR_WIFI_NAME",
+    "YOUR_WIFI_PASSWORD"
+);
+
+set_microros_wifi_transports(
+    "YOUR_WIFI_NAME",
+    "YOUR_WIFI_PASSWORD",
+    "YOUR_AGENT_IP",
+    8888
+);
+```
+
+Replace:
+
+| Placeholder | Description |
+|---|---|
+| `YOUR_WIFI_NAME` | Your WiFi SSID |
+| `YOUR_WIFI_PASSWORD` | Your WiFi password |
+| `YOUR_AGENT_IP` | IP address of Ubuntu/ROS 2 PC |
 
 ---
 
 # Installing micro-ROS Library
 
-In Arduino IDE:
+## Arduino IDE
 
 1. Open Arduino IDE
 2. Go to:
 
-   * `Sketch → Include Library → Manage Libraries`
+   ```
+   Sketch → Include Library → Manage Libraries
+   ```
+
 3. Search:
 
-   * `micro_ros_arduino`
+   ```
+   micro_ros_arduino
+   ```
+
 4. Install the library
 
 ---
@@ -125,8 +160,9 @@ In Arduino IDE:
 1. Open the `.ino` file
 2. Select:
 
-   * Board: `ESP32 Dev Module`
-   * Correct COM/USB port
+   - Board: `ESP32 Dev Module`
+   - Correct COM/USB port
+
 3. Upload the code to ESP32
 
 ---
@@ -145,23 +181,25 @@ ros2 run micro_ros_agent micro_ros_agent udp4 --port 8888
 
 # Running the Robot
 
-## Publish movement commands
-
-Forward:
+## Move Forward
 
 ```bash
 ros2 topic pub /cmd_vel geometry_msgs/msg/Twist \
 "{linear: {x: 0.5}, angular: {z: 0.0}}"
 ```
 
-Left turn:
+---
+
+## Turn Left
 
 ```bash
 ros2 topic pub /cmd_vel geometry_msgs/msg/Twist \
 "{linear: {x: 0.0}, angular: {z: 1.0}}"
 ```
 
-Stop:
+---
+
+## Stop Robot
 
 ```bash
 ros2 topic pub /cmd_vel geometry_msgs/msg/Twist \
@@ -178,13 +216,17 @@ ros2 topic pub /cmd_vel geometry_msgs/msg/Twist \
 ros2 topic echo /left_encoder
 ```
 
+---
+
 ## Right Encoder
 
 ```bash
 ros2 topic echo /right_encoder
 ```
 
-## Both Together
+---
+
+## Both Encoders Together
 
 ```bash
 ros2 topic echo /left_encoder &
@@ -214,30 +256,34 @@ ROS READY
 ```text
 .
 ├── README.md
-├── esp32_robot.ino
+├── LICENSE
+├── .gitignore
+└── ESP32_MicroRos_Control.ino
 ```
 
 ---
 
 # Future Improvements
 
-* PID motor control
-* Odometry calculation
-* TF publishing
-* SLAM integration
-* LiDAR support
-* Web dashboard
-* Autonomous navigation
+- PID motor control
+- Wheel odometry calculation
+- TF publishing
+- SLAM integration
+- LiDAR support
+- Autonomous navigation
+- ROS 2 Navigation Stack
+- Web dashboard monitoring
 
 ---
 
 # Author
 
-**Aadithya Rajesh**
+## Aadithya Rajesh
+
 ESP32-Based Robust Odometry Module
 
 ---
 
 # License
 
-This project is open-source and available under the MIT License.
+This project is licensed under the MIT License.
