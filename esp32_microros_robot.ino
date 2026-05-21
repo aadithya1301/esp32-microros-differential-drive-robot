@@ -160,8 +160,8 @@ void setup()
   // WIFI
   // ============================
   WiFi.begin(
-    "TECNO POVA 5 Pro 5G",
-    "aadi1301"
+    "YOUR_WIFI_NAME",
+    "YOUR_WIFI_PASSWORD"
   );
 
   Serial.print("Connecting WiFi");
@@ -182,9 +182,9 @@ void setup()
   // MICRO-ROS TRANSPORT
   // ============================
   set_microros_wifi_transports(
-    "TECNO POVA 5 Pro 5G",
-    "aadi1301",
-    "10.234.141.105",
+    "YOUR_WIFI_NAME",
+    "YOUR_WIFI_PASSWORD",
+    "YOUR_AGENT_IP",
     8888
   );
 
