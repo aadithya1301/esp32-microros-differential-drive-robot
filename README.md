@@ -57,10 +57,10 @@ This project allows an ESP32 robot to:
 
 | ESP32 Pin | Encoder |
 |---|---|
-| 34 | LEFT_C1 |
-| 35 | LEFT_C2 |
-| 33 | RIGHT_C1 |
-| 32 | RIGHT_C2 |
+| 33 | LEFT_C1 |
+| 32 | LEFT_C2 |
+| 34 | RIGHT_C1 |
+| 35 | RIGHT_C2 |
 
 ---
 
