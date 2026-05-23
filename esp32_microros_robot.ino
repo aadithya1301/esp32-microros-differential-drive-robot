@@ -23,11 +23,11 @@
 // ============================
 // ENCODERS
 // ============================
-#define LEFT_C1 34
-#define LEFT_C2 35
+#define LEFT_C1 33
+#define LEFT_C2 32
 
-#define RIGHT_C1 33
-#define RIGHT_C2 32
+#define RIGHT_C1 34
+#define RIGHT_C2 35
 
 volatile long leftTicks = 0;
 volatile long rightTicks = 0;
